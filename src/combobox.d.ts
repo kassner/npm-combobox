@@ -4,7 +4,7 @@ export default class Combobox {
     list: HTMLElement;
     selected: HTMLElement;
     comboboxController: GithubCombobox;
-    constructor(inputEl: string, listEl: string, selectedEl: string);
+    constructor(inputSelector: string, listSelector: string, selectedSelector: string);
     bindEvents(): void;
     filterList(): void;
     toggleList(): void;

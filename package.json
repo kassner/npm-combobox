@@ -1,0 +1,12 @@
+{
+    "name": "@kassner/combobox",
+    "license": "MIT",
+    "main": "src/combobox.js",
+    "author": {
+        "name": "Rafael Kassner",
+        "url": "https://www.kassner.com.br/"
+    },
+    "dependencies": {
+        "@github/combobox-nav": "^2.3.0"
+    }
+}

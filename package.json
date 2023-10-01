@@ -1,12 +1,18 @@
 {
     "name": "@kassner/combobox",
     "license": "MIT",
-    "main": "src/combobox.js",
     "author": {
         "name": "Rafael Kassner",
         "url": "https://www.kassner.com.br/"
     },
     "dependencies": {
         "@github/combobox-nav": "^2.3.0"
+    },
+    "type": "module",
+    "devDependencies": {
+        "ts-loader": "^9.4.4",
+        "typescript": "^5.2.2",
+        "webpack": "^5.88.2",
+        "webpack-cli": "^5.1.4"
     }
 }

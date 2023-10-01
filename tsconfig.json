@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es2020",
+    "allowJs": false,
+    "declaration": true
+  },
+  "files": ["src/combobox.ts"]
+}

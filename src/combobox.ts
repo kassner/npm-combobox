@@ -1,10 +1,15 @@
 import GithubCombobox from '@github/combobox-nav'
 
 export default class Combobox {
-    constructor(inputEl, listEl, selectedEl) {
-        this.input = document.querySelector(inputEl);
-        this.list = document.querySelector(listEl);
-        this.selected = document.querySelector(selectedEl);
+    input: HTMLInputElement;
+    list: HTMLElement;
+    selected: HTMLElement;
+    comboboxController: GithubCombobox;
+
+    constructor(inputSelector : string, listSelector : string, selectedSelector : string) {
+        this.input = document.querySelector(inputSelector);
+        this.list = document.querySelector(listSelector);
+        this.selected = document.querySelector(selectedSelector);
 
         this.comboboxController = new GithubCombobox(this.input, this.list);
         this.bindEvents();
@@ -23,14 +28,15 @@ export default class Combobox {
             this.comboboxController.stop();
         });
 
-        this.list.addEventListener('combobox-commit', (event) => {
-            let content = event.target.textContent;
+        this.list.addEventListener('combobox-commit', (event : Event) => {
+            const target = event.target as HTMLElement;
+            let content = target.textContent;
 
-            if (event.target.attributes.getNamedItem('data-create')?.value == 'true') {
+            if (target.attributes.getNamedItem('data-create')?.value == 'true') {
                 content = this.input.value;
             }
 
-            const template = this.selected.querySelector('template').cloneNode(true);
+            const template = this.selected.querySelector('template').cloneNode(true) as HTMLTemplateElement;
             const newHtml = template.innerHTML.replace('{{value}}', content);
             this.selected.insertAdjacentHTML('beforeend', newHtml)
 
@@ -48,14 +54,15 @@ export default class Combobox {
                 continue;
             }
 
-            item.hidden = !item.innerText.toLowerCase().includes(this.input.value.toLowerCase());
+            const el = item as HTMLElement;
+            item.setAttribute('hidden', el.innerText.toLowerCase().includes(this.input.value.toLowerCase()) ? 'hidden' : '');
         }
 
         if (this.input.value.length == 0) {
             return;
         }
 
-        const template = this.list.querySelector('template[data-role=create]').cloneNode(true);
+        const template = this.list.querySelector('template[data-role=create]').cloneNode(true) as HTMLTemplateElement;
         const newHtml = template.innerHTML.replace('{{value}}', this.input.value);
         this.list.insertAdjacentHTML('beforeend', newHtml)
     }

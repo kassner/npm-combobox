@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Combobox demo</title>
+</head>
+<style type="text/css">
+    [aria-selected=true] {
+        font-weight: bold;
+    }
+
+    [aria-disabled=true] {
+        color: lightslategray;
+    }
+</style>
+<body>
+    <form>
+        <ul aria-live="polite" id="selected">
+            <template>
+                <li role="listitem">
+                    <p>{{value}}</p>
+                    <input type="hidden" name="item[]" value="{{value}}">
+                </li>
+            </template>
+        </ul>
+        <input aria-controls="options" role="combobox" type="text" placeholder="Planet name" id="input" />
+        <ul id="options" role="listbox" hidden>
+            <li role="option">Mercury</li>
+            <li role="option">Venus</li>
+            <li role="option">Earth</li>
+            <li role="option">Mars</li>
+            <li role="option">Jupiter</li>
+            <li role="option">Saturn</li>
+            <li role="option">Uranus</li>
+            <li role="option">Neptune</li>
+            <li role="option">Pluto (in memoriam)</li>
+            <!-- @TODO do not define a template[data-role=create] if you don't need the feature -->
+            <template data-role="create">
+                <li role="option" data-create="true" data-combobox-option-default="true">Create "{{value}}"</li>
+            </template>
+        </ul>
+    </form>
+    <script type="importmap">
+        {
+            "imports": {
+                "@github/combobox-nav": "../node_modules/@github/combobox-nav/dist/index.js"
+            }
+        }
+    </script>
+    <script type="module">
+        import Combobox from '../dist/main.js';
+        new Combobox('#input', '#options', '#selected');
+    </script>
+</body>
+</html>

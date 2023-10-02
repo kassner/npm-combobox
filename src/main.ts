@@ -1,12 +1,22 @@
 import GithubCombobox from '@github/combobox-nav'
 
+export type ComboboxOptions = {
+    disableSelected: boolean;
+    replaceString: string | null;
+};
+
 export default class Combobox {
+    options: ComboboxOptions;
     input: HTMLInputElement;
     list: HTMLElement;
     selected: HTMLElement;
     comboboxController: GithubCombobox;
 
-    constructor(inputSelector: string, listSelector: string, selectedSelector: string) {
+    constructor(inputSelector: string, listSelector: string, selectedSelector: string, options: ComboboxOptions = {
+        disableSelected: false,
+        replaceString: '{{value}}',
+    }) {
+        this.options = options;
         this.input = document.querySelector(inputSelector) as HTMLInputElement;
         this.list = document.querySelector(listSelector) as HTMLElement;
         this.selected = document.querySelector(selectedSelector) as HTMLElement;
@@ -44,8 +54,12 @@ export default class Combobox {
             }
 
             const template = this.selected.querySelector('template')?.cloneNode(true) as HTMLTemplateElement;
-            const newHtml = template.innerHTML.replace('{{value}}', content);
+            const newHtml = this.options.replaceString == null ? template.innerHTML : replaceAll(template.innerHTML, this.options.replaceString, escapeHtml(content));
             this.selected.insertAdjacentHTML('beforeend', newHtml.trim());
+
+            if (this.options.disableSelected != true) {
+                target.setAttribute('aria-disabled', 'true');
+            }
 
             this.list.setAttribute('hidden', 'hidden');
             this.input.value = '';
@@ -84,12 +98,9 @@ export default class Combobox {
     }
 
     filterList() {
-        for (let item of this.list.children) {
-            if (item.attributes.getNamedItem('data-create')?.value == 'true') {
-                this.list.removeChild(item);
-                continue;
-            }
+        this.list.querySelectorAll('[data-create=true]').forEach(item => item.remove());
 
+        for (let item of this.list.children) {
             const el = item as HTMLElement;
             if (el.innerText.toLowerCase().includes(this.input.value.toLowerCase())) {
                 item.removeAttribute('hidden');
@@ -102,9 +113,12 @@ export default class Combobox {
             return;
         }
 
-        const template = this.list.querySelector('template[data-role=create]')?.cloneNode(true) as HTMLTemplateElement;
-        const newHtml = template.innerHTML.replace('{{value}}', this.input.value);
-        this.list.insertAdjacentHTML('beforeend', newHtml)
+        const createTemplate = this.list.querySelector('template[data-role=create]');
+        if (createTemplate != undefined) {
+            const template = createTemplate.cloneNode(true) as HTMLTemplateElement;
+            const newHtml = this.options.replaceString == null ? template.innerHTML : replaceAll(template.innerHTML, this.options.replaceString, escapeHtml(this.input.value));
+            this.list.insertAdjacentHTML('beforeend', newHtml.trim());
+        }
     }
 
     toggleList() {
@@ -119,3 +133,23 @@ export default class Combobox {
         }
     }
 }
+
+/**
+ * @link https://stackoverflow.com/a/6234804/430989
+ */
+const escapeHtml = (text: string): string => {
+    return text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+};
+
+const regExpEscape = (text: string): string => {
+    return text.replace(/[$-\/?[-^{|}]/g, '\\$&');
+};
+
+const replaceAll = (text: string, search: string, replacement: string): string => {
+    return text.replace(new RegExp(regExpEscape(search), 'g'), replacement);
+};

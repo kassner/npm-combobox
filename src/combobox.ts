@@ -77,7 +77,9 @@ export default class Combobox {
 
         this.selected.addEventListener('click', (event) => {
             const target = event.target as HTMLElement;
-            target.closest('[role=listitem]')?.remove();
+            if (target.matches('[role=remove]') || target.closest('[role=remove]')) {
+                target.closest('[role=listitem]')?.remove();
+            }
         });
     }
 

@@ -1,5 +1,3 @@
-const isProduction = process.env.NODE_ENV == 'production';
-
 const config = {
     entry: './src/main.ts',
     module: {
@@ -7,7 +5,6 @@ const config = {
             {
                 test: /\.(ts|tsx)$/i,
                 loader: 'ts-loader',
-                exclude: ['/node_modules/'],
             },
         ],
     },
@@ -16,9 +13,10 @@ const config = {
     },
 };
 
-export default () => {
-    if (isProduction) {
+export default (env, options) => {
+    if (options.mode == 'production') {
         config.mode = 'production';
+        config.optimization = { minimize: true, usedExports: false };
     } else {
         config.mode = 'development';
     }

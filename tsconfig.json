@@ -3,7 +3,8 @@
     "module": "commonjs",
     "target": "es2020",
     "allowJs": false,
-    "declaration": true
+    "declaration": true,
+    "declarationDir": "dist",
   },
-  "files": ["src/combobox.ts"]
+  "files": ["src/main.ts"]
 }

@@ -2,7 +2,9 @@ import GithubCombobox from '@github/combobox-nav'
 
 export type ComboboxOptions = {
     disableSelected: boolean;
-    replaceString: string | null;
+    keyLabel: string;
+    keyValue: string;
+    keyCreateValue: string;
 };
 
 export default class Combobox {
@@ -15,7 +17,9 @@ export default class Combobox {
     constructor(inputSelector: string, listSelector: string, selectedSelector: string, options: ComboboxOptions) {
         this.options = {
             disableSelected: false,
-            replaceString: '{{value}}',
+            keyLabel: '{{label}}',
+            keyValue: '{{value}}',
+            keyCreateValue: '{{value}}',
         };
         Object.assign(this.options, options);
 
@@ -49,14 +53,22 @@ export default class Combobox {
 
         this.list.addEventListener('combobox-commit', (event: Event) => {
             const target = event.target as HTMLElement;
-            let content = target.textContent || '';
+            let label = target.attributes.getNamedItem('data-label')?.value || target.textContent || '';
+            let value = target.attributes.getNamedItem('data-value')?.value || '';
 
             if (target.attributes.getNamedItem('data-create')?.value == 'true') {
-                content = this.input.value;
+                value = this.input.value;
+                label = this.input.value;
             }
 
             const template = this.selected.querySelector('template')?.cloneNode(true) as HTMLTemplateElement;
-            const newHtml = this.options.replaceString == null ? template.innerHTML : replaceAll(template.innerHTML, this.options.replaceString, escapeHtml(content));
+            let newHtml = template.innerHTML;
+
+            if (this.options.keyValue !== null) {
+                newHtml = replaceAll(newHtml, this.options.keyLabel, escapeHtml(label));
+                newHtml = replaceAll(newHtml, this.options.keyValue, escapeHtml(value));
+            }
+
             this.selected.insertAdjacentHTML('beforeend', newHtml.trim());
 
             if (this.options.disableSelected != true) {
@@ -118,7 +130,7 @@ export default class Combobox {
         const createTemplate = this.list.querySelector('template[data-role=create]');
         if (createTemplate != undefined) {
             const template = createTemplate.cloneNode(true) as HTMLTemplateElement;
-            const newHtml = this.options.replaceString == null ? template.innerHTML : replaceAll(template.innerHTML, this.options.replaceString, escapeHtml(this.input.value));
+            const newHtml = this.options.keyCreateValue == null ? template.innerHTML : replaceAll(template.innerHTML, this.options.keyCreateValue, escapeHtml(this.input.value));
             this.list.insertAdjacentHTML('beforeend', newHtml.trim());
         }
     }

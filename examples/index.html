@@ -17,22 +17,23 @@
         <ul aria-live="polite" id="selected">
             <template>
                 <li role="listitem">
-                    <p>{{value}}</p>
+                    <p>{{label}}</p>
                     <input type="hidden" name="item[]" value="{{value}}">
                 </li>
             </template>
         </ul>
         <input aria-controls="options" role="combobox" type="text" placeholder="Planet name" id="input" />
         <ul id="options" role="listbox" hidden>
-            <li role="option">Mercury</li>
-            <li role="option">Venus</li>
-            <li role="option">Earth</li>
-            <li role="option">Mars</li>
-            <li role="option">Jupiter</li>
-            <li role="option">Saturn</li>
-            <li role="option">Uranus</li>
-            <li role="option">Neptune</li>
-            <li role="option">Pluto (in memoriam)</li>
+            <li role="option" data-value="1">Mercury</li>
+            <li role="option" data-value="2">Venus</li>
+            <li role="option" data-value="3">Earth</li>
+            <li role="option" data-value="4">Mars</li>
+            <li role="option" data-value="5">Jupiter</li>
+            <li role="option" data-value="6">Saturn</li>
+            <li role="option" data-value="7">Uranus</li>
+            <li role="option" data-value="8">Neptune</li>
+            <li role="option" data-value="9" data-label="Pluto">Pluto (in memoriam)</li>
+
             <!-- @TODO do not define a template[data-role=create] if you don't need the feature -->
             <template data-role="create">
                 <li role="option" data-create="true" data-combobox-option-default="true">Create "{{value}}"</li>

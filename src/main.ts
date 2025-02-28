@@ -12,11 +12,13 @@ export default class Combobox {
     selected: HTMLElement;
     comboboxController: GithubCombobox;
 
-    constructor(inputSelector: string, listSelector: string, selectedSelector: string, options: ComboboxOptions = {
-        disableSelected: false,
-        replaceString: '{{value}}',
-    }) {
-        this.options = options;
+    constructor(inputSelector: string, listSelector: string, selectedSelector: string, options: ComboboxOptions) {
+        this.options = {
+            disableSelected: false,
+            replaceString: '{{value}}',
+        };
+        Object.assign(this.options, options);
+
         this.input = document.querySelector(inputSelector) as HTMLInputElement;
         this.list = document.querySelector(listSelector) as HTMLElement;
         this.selected = document.querySelector(selectedSelector) as HTMLElement;
